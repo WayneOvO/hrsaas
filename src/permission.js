@@ -62,3 +62,29 @@
 //   // finish progress bar
 //   NProgress.done()
 // })
+import router from '@/router/index.js'
+import store from '@/store/index.js'
+import nprogress from 'nprogress' // 进度条
+import 'nprogress/nprogress.css' // 进度条样式
+
+// 定义白名单路径
+const whiteList = ['/login', '/404']
+
+// 前置守卫
+router.beforeEach((to, form, next) => {
+  // 开启进度条
+  nprogress.start()
+  if (store.getters.token) {
+    to.path === '/login' ? next('/') : next()
+  } else {
+    whiteList.some((item) => item === to.path) ? next() : next('/login')
+  }
+  // 关闭进度条
+  nprogress.done()
+})
+
+// 后置守卫
+router.afterEach(() => {
+  // 关闭进度条
+  nprogress.done()
+})
