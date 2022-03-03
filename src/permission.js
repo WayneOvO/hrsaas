@@ -75,8 +75,10 @@ router.beforeEach((to, form, next) => {
   // 开启进度条
   nprogress.start()
   if (store.getters.token) {
+    // 有 token
     to.path === '/login' ? next('/') : next()
   } else {
+    // 无 token
     whiteList.some((item) => item === to.path) ? next() : next('/login')
   }
   // 关闭进度条
