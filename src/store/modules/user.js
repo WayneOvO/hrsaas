@@ -96,10 +96,11 @@
 // }
 //
 import { getToken, setToken, removeToken } from '@/utils/auth.js'
-import { login } from '@/api/user.js'
+import { login, getUserInfo } from '@/api/user.js'
 
 const state = {
-  token: getToken()
+  token: getToken(),
+  userInfo: {}
 }
 
 const mutations = {
@@ -110,6 +111,12 @@ const mutations = {
   removeToken(state) {
     state.token = null
     removeToken()
+  },
+  setUserInfo(state, userInfo) {
+    state.userInfo = userInfo
+  },
+  removeUserInfo(state) {
+    state.token = {}
   }
 }
 
@@ -117,6 +124,11 @@ const actions = {
   async login(context, data) {
     const result = await login(data)
     context.commit('setToken', result)
+  },
+  async getUserInfo(context) {
+    const result = await getUserInfo()
+    context.commit('setUserInfo', result)
+    return result
   }
 }
 

@@ -51,7 +51,7 @@ export default {
 
     // 大图样式
     .sidebar-logo {
-      height: 48px;
+      height: 46px;
       vertical-align: middle;
       //margin-right: 12px;
     }

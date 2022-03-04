@@ -82,6 +82,7 @@
 //   }
 // )
 import Axios from 'axios'
+import store from '@/store/index.js'
 import { Message } from 'element-ui'
 
 //  Axios实例
@@ -91,7 +92,17 @@ const service = Axios.create({
 })
 
 // 请求拦截器
-service.interceptors.request.use()
+service.interceptors.request.use(
+  (config) => {
+    if (store.getters.token) {
+      config.headers['Authorization'] = `Bearer ${store.getters.token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 // 响应拦截器
 service.interceptors.response.use(
