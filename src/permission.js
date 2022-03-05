@@ -71,12 +71,19 @@ import 'nprogress/nprogress.css' // 进度条样式
 const whiteList = ['/login', '/404']
 
 // 前置守卫
-router.beforeEach((to, form, next) => {
+router.beforeEach(async(to, form, next) => {
   // 开启进度条
   nprogress.start()
   if (store.getters.token) {
     // 有 token
-    to.path === '/login' ? next('/') : next()
+    // 1.to '/login'  redirect '/'
+    if (to.path === '/login') next('/')
+    // 2. 没有 userInfo.userId
+    if (!store.getters.userId) {
+      // 获取 userInfo
+      await store.dispatch('user/getUserInfo')
+      next()
+    }
   } else {
     // 无 token
     whiteList.some((item) => item === to.path) ? next() : next('/login')

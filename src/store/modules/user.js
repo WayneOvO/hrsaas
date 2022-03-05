@@ -96,7 +96,7 @@
 // }
 //
 import { getToken, setToken, removeToken } from '@/utils/auth.js'
-import { login, getUserInfo } from '@/api/user.js'
+import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
 
 const state = {
   token: getToken(),
@@ -116,7 +116,7 @@ const mutations = {
     state.userInfo = userInfo
   },
   removeUserInfo(state) {
-    state.token = {}
+    state.userInfo = {}
   }
 }
 
@@ -127,8 +127,15 @@ const actions = {
   },
   async getUserInfo(context) {
     const result = await getUserInfo()
-    context.commit('setUserInfo', result)
+    const baseInfo = await getUserDetailById(result.userId)
+    context.commit('setUserInfo', { ...result, ...baseInfo })
     return result
+  },
+  logout(context) {
+    // 1.删除 token
+    context.commit('removeToken')
+    // 2.删除 userInfo
+    context.commit('removeUserInfo')
   }
 }
 
