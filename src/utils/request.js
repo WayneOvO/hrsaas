@@ -84,6 +84,8 @@
 import Axios from 'axios'
 import store from '@/store/index.js'
 import { Message } from 'element-ui'
+import { getTimeStamp } from '@/utils/auth.js'
+import router from '@/router/index.js'
 
 //  Axios实例
 const service = Axios.create({
@@ -91,10 +93,18 @@ const service = Axios.create({
   timeout: 5000
 })
 
+const TIMEOUT = 60 * 60 * 1000 // ms
+// const TIMEOUT = 500 // ms
+
 // 请求拦截器
 service.interceptors.request.use(
-  (config) => {
+  async(config) => {
     if (store.getters.token) {
+      if (isTokenTimeOut()) {
+        await store.dispatch('user/logout')
+        router.push('/login')
+        return Promise.reject(new Error('token timeout'))
+      }
       config.headers['Authorization'] = `Bearer ${store.getters.token}`
     }
     return config
@@ -120,5 +130,9 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+function isTokenTimeOut() {
+  return Date.now() - getTimeStamp() > TIMEOUT
+}
 
 export default service

@@ -95,7 +95,7 @@
 //   actions
 // }
 //
-import { getToken, setToken, removeToken } from '@/utils/auth.js'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth.js'
 import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
 
 const state = {
@@ -124,6 +124,7 @@ const actions = {
   async login(context, data) {
     const result = await login(data)
     context.commit('setToken', result)
+    setTimeStamp(Date.now())
   },
   async getUserInfo(context) {
     const result = await getUserInfo()
