@@ -2,12 +2,11 @@ import Layout from '@/layout/index.vue'
 
 export default {
   path: '/setting',
-  name: 'setting',
-  components: Layout,
+  component: Layout,
   children: [
     {
       path: '',
-      components: () => import('@/views/setting'),
+      component: () => import('@/views/setting'),
       meta: {
         title: '公司设置'
       }
